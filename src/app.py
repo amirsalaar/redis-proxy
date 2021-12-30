@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from src.redis_proxy import redis_proxy_controller
+from src.proxy_web_service import proxy_controller as redis_proxy_controller
 
 
 def create_app():
