@@ -2,13 +2,21 @@
 [run]
 branch = True
 omit =
-    ./env/*
+    ./.venv/*
     # omit everything in /usr
     /usr/*
+    **/tests/*
 include=
-    ./lib/*
+    ./src/*
 
 [report]
+omit =
+    ./.venv/*
+    # omit everything in /usr
+    /usr/*
+    **/tests/*
+include=
+    ./src/*
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
