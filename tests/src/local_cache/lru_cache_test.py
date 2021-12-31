@@ -13,3 +13,20 @@ def test_lru_cache_get():
 
     assert cache.get("key1") == -1
     assert cache.get("key2") == 2
+
+
+def test_lru_cache_remove():
+    """
+    Test the remove method of the LRU cache.
+    """
+    from src.local_cache import LRUCache
+
+    cache = LRUCache(capacity=2)
+
+    cache.put("key1", 1)
+    cache.put("key2", 2)
+
+    cache.remove("key1")
+
+    assert cache.get("key1") == -1
+    assert cache.get("key2") == 2
