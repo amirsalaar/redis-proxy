@@ -20,21 +20,12 @@ def run_test_with_option(option: str = None):
                 [
                     "--disable-pytest-warnings",
                     "--cov=.",
+                    "--cov-report=term:skip-covered",
                     "--cov-report=xml",
-                    "--cov-config=.coveragerc",
-                    "--cov-append",
-                ]
-            )
-        )
-    elif option == "coverage":
-        raise SystemExit(
-            pytest.main(
-                [
-                    "--disable-pytest-warnings",
-                    "--cov=.",
                     "--cov-report=html",
                     "--cov-config=.coveragerc",
                     "--cov-append",
+                    "--no-cov-on-fail",
                 ]
             )
         )
