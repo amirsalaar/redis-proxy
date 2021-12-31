@@ -18,6 +18,8 @@ redis = "*"
 [dev-packages]
 flake8 = "*"
 black = "*"
+pre-commit = "*"
+flake8-docstrings = "*"
 
 [requires]
 python_version = "3.8"
