@@ -7,12 +7,13 @@ def test_lru_cache_get():
     cache = LRUCache(capacity=2)
 
     cache.set("key1", 1)
-    cache.get("key1")  # returns 1 and moves key1 to the end
+    cache.get("key1")
     cache.set("key2", 2)
     cache.set("key3", 3)  # key2 will be removed
 
-    assert cache.get("key1") == -1
-    assert cache.get("key2") == 2
+    assert cache.get("key2") == -1
+    assert cache.get("key1") == 1
+    assert cache.get("key3") == 3
 
 
 def test_lru_cache_remove():

@@ -11,7 +11,7 @@ class LRUCache:
         """we return the value of the key
         that is queried in O(1) and return -1 if we
         don't find the key in out dict / cache.
-        And also move the key to the end
+        And also move the key to the beginning
         to show that it was recently used.
 
         Args:
@@ -23,25 +23,29 @@ class LRUCache:
         if key not in self.cache:
             return -1
         else:
-            self.cache.move_to_end(key)
+            self.cache.move_to_end(
+                key, last=False
+            )  # moves to the beginning due to last=False
             return self.cache[key]
 
     def set(self, key: str, value: any) -> None:
         """
         1. We add / update the key and value to the OrderedDict.
-        2. Move the key to the end to show that it was recently used.
-        3. We will also check whether the length of our
+        2. We will also check whether the length of our
             ordered dictionary has exceeded our capacity,
-            If so we remove the key from the end (least recently used)
+            If so we remove the key from the beginning (least recently used)
+        3. Move the key to the beginning to show that it was recently used.
 
         Args:
             key (str): the key to be added / updated.
             value (any): the value of the key to be added / updated.
         """
         self.cache[key] = value
-        self.cache.move_to_end(key)
         if len(self.cache) > self.capacity:
             self.cache.popitem(last=False)
+        self.cache.move_to_end(
+            key, last=False
+        )  # moves to the beginning due to last=False
 
     def remove(self, key: str) -> None:
         """
@@ -49,3 +53,9 @@ class LRUCache:
         """
         if key in self.cache:
             del self.cache[key]
+
+    def get_all_keys(self) -> list:
+        """
+        Return all the keys in the cache.
+        """
+        return list(self.cache.keys())
