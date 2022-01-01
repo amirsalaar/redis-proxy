@@ -27,11 +27,12 @@ class LRUCache:
             return self.cache[key]
 
     def put(self, key: str, value: any) -> None:
-        """first, we add / update the key by conventional methods.
-        And also move the key to the end to show that it was recently used.
-        But here we will also check whether the length of our
-        ordered dictionary has exceeded our capacity,
-        If so we remove the first key (least recently used)
+        """
+        1. We add / update the key and value to the OrderedDict.
+        2. Move the key to the end to show that it was recently used.
+        3. We will also check whether the length of our
+            ordered dictionary has exceeded our capacity,
+            If so we remove the key from the end (least recently used)
 
         Args:
             key (str): the key to be added / updated.

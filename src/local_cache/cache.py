@@ -11,7 +11,7 @@ CACHE_CAPACITY = int(env_vars_store.get("CACHE_CAPACITY", "10"))
 @dataclass
 class CacheBox:
     """
-    A cache box is a container for a cache.
+    A cache box is a container for a LRUCache with a global expiry.
     """
 
     cache: LRUCache
@@ -30,7 +30,7 @@ class CachedValue:
 
 class LocalCache:
     """
-    A cache is a container for a cache box.
+    This class imlements the local cache.
     """
 
     def __init__(
