@@ -26,7 +26,7 @@ class LRUCache:
             self.cache.move_to_end(key)
             return self.cache[key]
 
-    def put(self, key: str, value: any) -> None:
+    def set(self, key: str, value: any) -> None:
         """
         1. We add / update the key and value to the OrderedDict.
         2. Move the key to the end to show that it was recently used.

@@ -67,7 +67,7 @@ class LocalCache:
         expiry = now + self.cache_box.global_expiry
 
         cached_value = CachedValue(value=value, expiry=expiry)
-        self.cache_box.cache.put(key, cached_value)
+        self.cache_box.cache.set(key, cached_value)
 
     def _is_expired(self, cached_value: CachedValue) -> bool:
         """

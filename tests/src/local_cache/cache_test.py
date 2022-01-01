@@ -1,4 +1,5 @@
 import time
+import pytest
 
 
 def test_local_cache_get():
