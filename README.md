@@ -57,12 +57,18 @@ The Redis instance will be instantiated along with the server and assuming that 
 
 - `REDIS_ADDRESS=redis:6379`
 
+### 3. HTTP Proxy Server
+
+The Proxy server will communicate between the Backing Redis instance and the Local Cache.
+
 # Code Overview
 
 For concurrent access management, a mutual exclusion object was used. I had no previous experience with such a concept and that was agreat learning moment for me. This ended me up becoming familiar with `mutex` and `semaphore`.
 
 - `mutex`: An oject is created so that multiple program thread can take turns sharing the same resource. It is a **locking mechanism**.
 - `semaphore`: It is a signaling mechanism.
+
+The mutex object in Python has been implemented using the threading module by locking the thread to wait for the current thread to finish first before proceeding to the next thread. In the `CacheBox` class, `locker` has been used as mutex to manage the locking and thread.
 
 # Algorithmic Complexity
 
