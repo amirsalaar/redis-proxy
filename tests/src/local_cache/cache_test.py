@@ -1,22 +1,9 @@
 import time
 from pytest_mock import MockFixture
+import pytest
 
 
-def test_local_cache_get():
-    """
-    Test the get method of the local cache.
-    """
-    from src.local_cache import LocalCache
-
-    local_cache = LocalCache(capacity=2, global_expiry=5)
-
-    local_cache.set("key1", "value1")
-    time.sleep(2)
-    assert local_cache.get("key1") == "value1"
-    time.sleep(3)
-    assert local_cache.get("key1") is None
-
-
+@pytest.mark.order1
 def test_local_cache_get_with_global_config(mocker: MockFixture):
     """
     Test the get method of the local cache with global config.
@@ -41,3 +28,19 @@ def test_local_cache_get_with_global_config(mocker: MockFixture):
     assert all(
         key in local_cache.cache_box.cache.get_all_keys() for key in ["key3", "key1"]
     )
+
+
+@pytest.mark.order2
+def test_local_cache_get():
+    """
+    Test the get method of the local cache.
+    """
+    from src.local_cache import LocalCache
+
+    local_cache = LocalCache(capacity=2, global_expiry=5)
+
+    local_cache.set("key1", "value1")
+    time.sleep(2)
+    assert local_cache.get("key1") == "value1"
+    time.sleep(3)
+    assert local_cache.get("key1") is None
