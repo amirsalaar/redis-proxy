@@ -21,3 +21,16 @@ def test_get_a_key_val_from_backing_redis():
     assert get("test_key2", client) == "value2"
 
     client.delete("test_key2")
+
+
+def test_wrapper_class():
+    from src.backing_redis import RedisClient
+
+    client = RedisClient("localhost:6379")
+
+    client.instance.set("test_key2", "value2")
+
+    assert not client.get("test_key")
+    assert client.get("test_key2") == "value2"
+
+    client.instance.delete("test_key2")

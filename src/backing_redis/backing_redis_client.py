@@ -1,6 +1,20 @@
 from redis import Redis
 
 
+class RedisClient:
+    """A wrapper class around the initial Functional Programming style for this client."""
+
+    def __init__(self, redis_address: str):
+        self.redis_client = redis_client(redis_address)
+
+    @property
+    def instance(self):
+        return self.redis_client
+
+    def get(self, key: str) -> str:
+        return get(key, self.redis_client)
+
+
 def redis_client(redis_address: str) -> Redis:
     if len(redis_address.split(":")) != 2:
         raise ValueError("redis_address must be in the format of `host:port`")
