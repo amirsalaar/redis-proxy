@@ -15,7 +15,7 @@ class CacheBox:
     """
 
     cache: LRUCache
-    global_expiry: int
+    global_expiry: int  # in seconds
 
 
 @dataclass
@@ -25,7 +25,7 @@ class CachedValue:
     """
 
     value: any
-    expiry: int
+    expiry: int  # in seconds
 
 
 class LocalCache:

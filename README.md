@@ -1,10 +1,10 @@
-## Documentation
+# Documentation
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Local Development Setup
+# Local Development Setup
 
-### Environment Variables
+## Environment Variables
 
 We are using `dotenv` package to utilize environment variables in this project. Refer to `.env.example` file in the repo to see the existing environment variables. Then make a new copy of this file and rename it to `.env` in the root of the project.
 
@@ -17,21 +17,27 @@ export FLASK_APP=manage.py
 
 ```
 
-1. Running in **watch** mode: will keep your tests watching for changes and run them
-   ```bash
-   flask tests watch
-   ```
-2. Running in **debug** mode: will prompt you to debugging console if any error is thrown during running tests
-   ```bash
-   flask tests debug
-   ```
-3. Running in in coverage mode: will generate html files of the coverage report. You can open `./tests/coverage/html_report/index.html` to see the whole report.
+1. Following syntax will run all the tests and generates the coverage report.
 
-   ```bash
-   flask tests coverage
-   ```
-
-4. Runnning without passing any parameters: will run the whole tests and generates `coverage.xml` report which needs to be committed with your MR.
    ```bash
    flask tests
    ```
+
+2. Running in **watch** mode: will keep your tests watching for changes and run them
+   ```bash
+   flask tests watch
+   ```
+3. Running in **debug** mode: will prompt you to debugging console if any error is thrown during running tests
+   ```bash
+   flask tests debug
+   ```
+
+# Architecture Overview
+
+# Code Overview
+
+# Algorithmic Complexity
+
+# Instruction Nn How To Run The Proxy And Tests
+
+# List of Not Imlemented Requirements
