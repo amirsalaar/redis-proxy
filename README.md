@@ -34,10 +34,33 @@ export FLASK_APP=manage.py
 
 # Architecture Overview
 
+Three different componenets have been considered in designing this distributed system.
+
+1. Local Cache
+2. Backing Redis Instance
+3. HTTP Proxy Server
+
+## 1. Local Cache
+
+`LocalCache` module is an LRU cache with two global configuration that can be set up before running the system as enviroment variables in the `.env` file.
+
+1. `CACHE_CAPACITY`: This will determine the capacity of your LRU cache.
+2. `GLOBAL_CACHE_EXPIRY`: This will determine the global expiry of the LRU cache. I assumed that the expiry will be used in **seconds**.
+
+### LRU Cache
+
+The LRU cache was implemented using an OrderedDict in Python and it is utilized in `cache.py` module.
+
+## 2. Backing Redis Instance
+
+The Redis instance will be instantiated along with the server and assuming that both of the server and Redis isntance are on the same Docker host, no IP address was used to refer to the redis instance. I have defaulted the Backing Redis instance to `redis:6379` in the `.env` file but you can configure it to any Redis instance by setting the following ENV var inside the `.env`:
+
+- `REDIS_ADDRESS=redis:6379`
+
 # Code Overview
 
 # Algorithmic Complexity
 
-# Instruction Nn How To Run The Proxy And Tests
+# Instruction On How To Run The Proxy And Tests
 
 # List of Not Imlemented Requirements
