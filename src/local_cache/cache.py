@@ -60,7 +60,7 @@ class LocalCache:
         - if not expired, it's moved to the end of the cache
         """
         global cache_locker
-        cache_locker.acquire()
+        cache_locker.acquire()  # locks the unlocked thread
         try:
             cached_value: CachedValue = self.cache_box.cache.get(key)
             if cached_value:
@@ -72,7 +72,7 @@ class LocalCache:
 
             return None
         finally:
-            cache_locker.release()
+            cache_locker.release()  # unlocks the locked thread
 
     def set(self, key: str, value: any) -> None:
         """Set the key and value into the cache.
@@ -89,9 +89,11 @@ class LocalCache:
 
         cached_value = CachedValue(value=value, expiry=expiry)
         global cache_locker
-        cache_locker.acquire()
-        self.cache_box.cache.set(key, cached_value)
-        cache_locker.release()
+        cache_locker.acquire()  # locks the unlocked thread
+        try:
+            self.cache_box.cache.set(key, cached_value)
+        finally:
+            cache_locker.release()
 
     def _is_expired(self, cached_value: CachedValue) -> bool:
         """Check whether the cached value is expired.

@@ -70,6 +70,10 @@ For concurrent access management, a mutual exclusion object was used. I had no p
 
 The mutex object in Python has been implemented using the threading module by locking the thread to wait for the current thread to finish first before proceeding to the next thread. In the `CacheBox` class, `locker` has been used as mutex to manage the locking and thread.
 
+## Expiry Implementation
+
+At the time of setting a new key-value pair in the cache, an expiry in seconds will be added to the object that is going to be cached. On retrieving the cached key, if the time has passed from the expiry, we remove it from the Cache and return `None`.
+
 # Algorithmic Complexity
 
 # Instruction On How To Run The Proxy And Tests
