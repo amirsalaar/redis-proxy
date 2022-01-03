@@ -59,6 +59,11 @@ The Redis instance will be instantiated along with the server and assuming that 
 
 # Code Overview
 
+For concurrent access management, a mutual exclusion object was used. I had no previous experience with such a concept and that was agreat learning moment for me. This ended me up becoming familiar with `mutex` and `semaphore`.
+
+- `mutex`: An oject is created so that multiple program thread can take turns sharing the same resource. It is a **locking mechanism**.
+- `semaphore`: It is a signaling mechanism.
+
 # Algorithmic Complexity
 
 # Instruction On How To Run The Proxy And Tests
