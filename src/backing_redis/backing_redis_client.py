@@ -1,3 +1,4 @@
+import re
 from redis import Redis
 
 
@@ -16,8 +17,11 @@ class RedisClient:
 
 
 def redis_client(redis_address: str) -> Redis:
-    if len(redis_address.split(":")) != 2:
-        raise ValueError("redis_address must be in the format of `host:port`")
+    if not re.match(r"^[\w\d\.]+:[\d]+$", redis_address):
+        raise ValueError(
+            "Invalid redis address. "
+            "Example of the expected format: redis:6379, https://your-redis-address:6379"
+        )
 
     redis_host, redis_port = redis_address.split(":")
     r = Redis(host=redis_host, port=redis_port)

@@ -9,6 +9,11 @@ def test_redis_client_throws_error_on_improper_connection():
     ):
         redis_client("random_host:6379")
 
+    with pytest.raises(
+        ValueError, match="(Invalid redis address. Example of the expected format).*"
+    ):
+        redis_client("redis=6379")
+
 
 def test_get_a_key_val_from_backing_redis():
     from src.backing_redis import get, redis_client
