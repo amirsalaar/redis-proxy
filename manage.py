@@ -46,8 +46,12 @@ def run_test_with_option(option: str = None):
 
 
 if __name__ == "__main__":
+    HOST = os.getenv("FLASK_RUN_HOST", "127.0.0.1")
+    PORT = int(os.getenv("FLASK_RUN_PORT", 5000))
+    DEBUG = os.getenv("FLASK_DEBUG", False)
+
     app.run(
-        host=os.getenv("FLASK_RUN_HOST"),
-        port=os.getenv("FLASK_RUN_PORT"),
-        debug=os.getenv("FLASK_DEBUG"),
+        host=HOST,
+        port=PORT,
+        debug=DEBUG,
     )
