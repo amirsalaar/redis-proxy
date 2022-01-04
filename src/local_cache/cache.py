@@ -1,3 +1,4 @@
+"""This module implements the LocalCache class."""
 import time
 from threading import Lock
 from dataclasses import dataclass
@@ -15,8 +16,7 @@ cache_locker = Lock()
 
 @dataclass
 class CacheBox:
-    """
-    A cache box is a container for a LRUCache with a global expiry.
+    """A cache box is a container for a LRUCache with a global expiry.
     The cache might be in use by a thread. So, i order to avoid
     its interferece with other threads, it must be locked when it is used.
     - A locker object field is used to lock the local cache.
@@ -29,18 +29,14 @@ class CacheBox:
 
 @dataclass
 class CachedValue:
-    """
-    A data structure of the cached values.
-    """
+    """A data structure of the cached values."""
 
     value: any
     expiry: int  # in seconds
 
 
 class LocalCache:
-    """
-    This class imlements the local cache.
-    """
+    """This class imlements the local cache."""
 
     def __init__(
         self, capacity: int = CACHE_CAPACITY, global_expiry: int = GLOBAL_CACHE_EXPIRY
