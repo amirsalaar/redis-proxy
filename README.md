@@ -39,6 +39,9 @@ Three different componenets have been considered in designing this distributed s
 1. Local Cache
 2. Backing Redis Instance
 3. HTTP Proxy Server
+4. Utilities
+   - app_logger
+   - error_handler
 
 ## 1. Local Cache
 
@@ -57,9 +60,15 @@ The Redis instance will be instantiated along with the server and assuming that 
 
 - `REDIS_ADDRESS=redis:6379`
 
-### 3. HTTP Proxy Server
+## 3. HTTP Proxy Server
 
 The Proxy server will communicate between the Backing Redis instance and the Local Cache.
+
+## 4. Utilities
+
+- App Logger: A simple custom app logger has been implemented that collects the logs of the application and puts it into `applogs.log`.
+  - These logs are handy when you want to see if a key has been retrieved from the local cache or backing redis
+- Custom Error Handler: A custom error handler has been implemented to return a unified error to the proxy consumers with traceback and a proper message.
 
 # Code Overview
 
@@ -75,6 +84,8 @@ The mutex object in Python has been implemented using the threading module by lo
 At the time of setting a new key-value pair in the cache, an expiry in seconds will be added to the object that is going to be cached. On retrieving the cached key, if the time has passed from the expiry, we remove it from the Cache and return `None`.
 
 # Algorithmic Complexity
+
+A built-in python OrederedDict has been used in the implementation of the LRU. Similar to dictionaries, the `get` and `set` method to retrieve and put a key value is of O(1) time complexity. The space complexity depdends on the value that has been stored initially. When looking up the Backing Redis for a key value the time complexity will be still O(1).
 
 # Instruction On How To Run The Proxy And Tests
 
