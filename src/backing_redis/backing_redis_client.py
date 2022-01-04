@@ -1,5 +1,6 @@
 import re
 from redis import Redis
+from src.utilities.error_handler import ProxyAppError
 
 
 class RedisClient:
@@ -17,20 +18,29 @@ class RedisClient:
 
 
 def redis_client(redis_address: str) -> Redis:
-    if not re.match(r"^[\w\d\.]+:[\d]+$", redis_address):
-        raise ValueError(
-            "Invalid redis address. "
-            "Example of the expected format: redis:6379, https://your-redis-address:6379"
-        )
-
-    redis_host, redis_port = redis_address.split(":")
-    r = Redis(host=redis_host, port=redis_port)
+    host, port = __extract_host_and_port(redis_address)
+    r = Redis(host=host, port=port)
 
     try:
         if r.ping():
             return r.client()
     except Exception as e:
         raise ConnectionError(f"Connection to Backing Redis refused: {e}")
+
+
+def __extract_host_and_port(redis_address: str) -> tuple:
+    try:
+        if re.findall(r"[\w\d\.]+:[\d]+$", redis_address):
+            # when the format is redis_address:port
+            host, port = redis_address.split(":")
+        else:
+            # when an actual ip/host:port format is provided
+            matched_regx = re.findall("http[s]?://(.*):(.*)", redis_address)
+            host, port = matched_regx[0]
+            port: str = port.rstrip("/")
+        return host, port
+    except Exception as e:
+        raise ProxyAppError(f"Invalid Redis address: {e}")
 
 
 def get(key: str, redis_client: Redis):
