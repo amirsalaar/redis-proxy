@@ -2,7 +2,7 @@
 from flask import Flask
 from flask_cors import CORS
 from src.proxy_web_service import proxy_controller as redis_proxy_controller
-from src.utilities import generic_error_hanlder, ProxyAppError
+from src.utilities import generic_error_hanlder, ProxyAppError, example_controller
 
 
 def create_app(config_object={}):
@@ -14,5 +14,6 @@ def create_app(config_object={}):
     app.register_error_handler(ProxyAppError, generic_error_hanlder)
     app.register_error_handler(Exception, generic_error_hanlder)
     app.register_blueprint(redis_proxy_controller)
+    app.register_blueprint(example_controller)
 
     return app
