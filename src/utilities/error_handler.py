@@ -35,6 +35,10 @@ def convert_error(err):
     Args:
         e ([type])
     """
+    if type(err) == ProxyAppError:
+        # Avoid recursive error handling
+        raise err
+
     raise ProxyAppError(
         message=f"{err}",
         status_code=lookup_status_code(err),
