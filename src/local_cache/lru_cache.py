@@ -21,7 +21,7 @@ class LRUCache:
             any: the value of the key queried.
         """
         if key not in self.cache:
-            return -1
+            return None
         else:
             self.cache.move_to_end(
                 key, last=False

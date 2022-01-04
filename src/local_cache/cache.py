@@ -91,7 +91,11 @@ class LocalCache:
             cached_value (CachedValue): the cached value to be checked.
         """
         now = time.time()
-        if cached_value.expiry <= now:
+        if (
+            cached_value
+            and isinstance(cached_value, CachedValue)
+            and cached_value.expiry <= now
+        ):
             return True
 
         return False
