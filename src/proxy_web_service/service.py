@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from src.backing_redis import RedisClient
 from src.local_cache import LocalCache
+from src.utilities.app_logger import logger
 
 
 @dataclass
@@ -31,7 +32,7 @@ class ProxyService:
             local_cache=in_memory_local_cache,
         )
 
-    def retrieve_value_for(self, key: str) -> str:
+    def retrieve_value_for(self, key: str) -> str | None:
         """Handle the GET request.
 
         Logic:
@@ -50,6 +51,12 @@ class ProxyService:
             value_in_backing_redis = self.proxy.redis_client.get(key)
             if value_in_backing_redis:
                 self.proxy.local_cache.set(key, value_in_backing_redis)
+                logger.info(
+                    f"Retrieved value for key: {key} from the backing redis. Setting it in the local cache too."
+                )
                 return value_in_backing_redis
 
+            return None
+
+        logger.info(f"Retrieved value for key: {key} from the local cache.")
         return value_in_local_cache
