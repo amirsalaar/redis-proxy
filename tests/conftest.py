@@ -1,6 +1,7 @@
 import os
 import pytest
 from src.app import create_app
+from pytest_mock import MockerFixture
 
 if os.getenv("FLASK_ENV") == "production":
     TEST_REDIS_ADDRESS = "redis:6379"
@@ -19,6 +20,11 @@ def test_client():
 @pytest.fixture()
 def get_test_redis_address():
     return TEST_REDIS_ADDRESS
+
+
+@pytest.fixture()
+def mocked_redis_address(mocker: MockerFixture):
+    mocker.patch("src.proxy_web_service.controller.REDIS_ADDRESS", TEST_REDIS_ADDRESS)
 
 
 @pytest.fixture()
