@@ -1,12 +1,11 @@
 from flask.testing import FlaskClient
 
 from src.backing_redis import redis_client
-from src.constants import REDIS_ADDRESS
 
 
-def test_get_key(test_client: FlaskClient):
+def test_get_key(test_client: FlaskClient, get_test_redis_address):
     """Test the get method of the local cache."""
-    r = redis_client(redis_address=REDIS_ADDRESS)
+    r = redis_client(redis_address=get_test_redis_address)
     r.set("hello", "world")
 
     response = test_client.get("/proxy/", query_string={"key": "hello"})
