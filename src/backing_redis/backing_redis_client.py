@@ -29,6 +29,21 @@ def redis_client(redis_address: str) -> Redis:
 
 
 def __extract_host_and_port(redis_address: str) -> tuple:
+    """Extract the host and port from the redis_address.
+
+    Two expected formats for the redis_address are:
+    1. "host:port": When the Backing Redis is on the same cluster as the Proxy server.
+    2. "http(s)://host:port": When we are going to use a backling redis that is outside our cluster.
+
+    Args:
+        redis_address (str): The address of the Backing Redis.
+
+    Raises:
+        ProxyAppError
+
+    Returns:
+        tuple: The host and port of the Backing Redis.
+    """
     try:
         if re.findall(r"[\w\d\.]+:[\d]+$", redis_address):
             # when the format is redis_address:port
