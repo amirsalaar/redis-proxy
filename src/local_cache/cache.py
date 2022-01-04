@@ -11,11 +11,9 @@ cache_locker = Lock()
 
 @dataclass
 class CacheContainer:
-    """A cache box is a container for a LRUCache with a global expiry.
-    The cache might be in use by a thread. So, i order to avoid
-    its interferece with other threads, it must be locked when it is used.
-    - A locker object field is used to lock the local cache.
+    """Hold reference to an LRUCache and a global expiry.
 
+    This is a dataclass that holds a reference to an LRUCache and a global expiry.
     """
 
     cache: LRUCache
