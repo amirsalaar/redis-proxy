@@ -45,6 +45,22 @@ def run_test_with_option(option: str = None):
         )
 
 
+@app.cli.command("seed")
+def seed():
+    """Seed the Backing Redis with some data."""
+    from tests.seed import seed_db
+
+    seed_db()
+
+
+@app.cli.command("clean")
+def clean_seed():
+    """Clean the seed data."""
+    from tests.seed import clean_db
+
+    clean_db()
+
+
 if __name__ == "__main__":
     HOST = os.getenv("FLASK_RUN_HOST", "127.0.0.1")
     PORT = int(os.getenv("FLASK_RUN_PORT", 5000))
