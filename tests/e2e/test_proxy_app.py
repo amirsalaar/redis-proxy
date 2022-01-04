@@ -16,9 +16,15 @@ CAPACITY = 10
 GLOBAL_EXPIRY = 30  # seconds
 
 
-@pytest.fixture()
-def mocked_redis_address(mocker: MockerFixture):
-    mocker.patch("src.proxy_web_service.controller.REDIS_ADDRESS", TEST_REDIS_ADDRESS)
+@pytest.mark.order0
+def test_proxy_app_throws_handled_error_response_on_invalid_key(
+    test_client: FlaskClient, mocked_redis_address
+):
+    """Test if NotFound error is returned for non-existing keys."""
+    res = test_client.get("/proxy/", query_string={"key": "key100"})
+    assert res.status_code == 404
+    assert res.json.get("error_type") == "NotFound"
+    assert res.json.get("message") == "404 Not Found: Key not found."
 
 
 @pytest.mark.order1
@@ -70,7 +76,9 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
             -> it retrieves the key from the local cache and removes it due to being expired.
             -> then looks into backing redis for the key and if finds it puts it back into the local cache.
     """
-    mocker.patch("src.proxy_web_service.controller.local_cache", LocalCache(10, 3))
+    mocker.patch(
+        "src.proxy_web_service.controller.local_cache", LocalCache(CAPACITY, 3)
+    )
 
     test_redis_client.set("key3", "value3")
 
@@ -82,3 +90,46 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
     res2 = test_client.get("/proxy/", query_string={"key": "key3"})
 
     assert res2.json == {"cached_value": "value in redis changed"}
+
+
+@pytest.mark.order4
+def test_proxy_app_should_delete_the_lru_cached_key_if_we_hit_cache_key_limit(
+    mocker: MockerFixture,
+    test_client: FlaskClient,
+    test_redis_client: Redis,
+    mocked_redis_address,
+):
+    """Test deletion of a key from the local cache when reaching the capacity.
+
+    Assume that the capacity is 10 and we have 10 keys in the local cache.
+    We are testing the following scenario:
+        - We request for getting the 11th key that is not in the local cache.
+            -> First we need to add all those 10 keys to redis, then query them to put them in the local cache.
+            -> To confirm the eviction, we query the key1 to make it LRU.
+            -> The 11th key will be added to the local cache and key1 will be evicted.
+
+    """
+    mocker.patch(
+        "src.proxy_web_service.controller.local_cache",
+        LocalCache(CAPACITY, GLOBAL_EXPIRY),
+    )
+
+    for i in range(1, CAPACITY + 2):
+        test_redis_client.set(f"key{i}", f"value{i}")
+
+    for i in range(1, CAPACITY + 2):
+        # all the keys will be added to the local cache:
+        test_client.get("/proxy/", query_string={"key": f"key{i}"})
+
+    # At this point key10 is the LRU key and will be evicted.
+
+    test_redis_client.set("key10", "updated value10")
+    test_redis_client.set("key11", "value11")
+
+    res2 = test_client.get("/proxy/", query_string={"key": "key10"})
+
+    # we had initially cached 'value10',
+    # but since we expect it to be evicted,
+    # we dont expect 'key10' have 'value10' anymore.
+    assert res2.json != {"cached_value": "value10"}
+    assert res2.json == {"cached_value": "updated value10"}

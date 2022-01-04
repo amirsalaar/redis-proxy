@@ -3,7 +3,8 @@ from dataclasses import dataclass
 
 from src.backing_redis import RedisClient
 from src.local_cache import LocalCache
-from src.utilities.app_logger import logger
+from src.utilities import logger
+from werkzeug.exceptions import NotFound
 
 
 @dataclass
@@ -55,7 +56,7 @@ class ProxyService:
                 )
                 return value_in_backing_redis
 
-            return None
+            raise NotFound("Key not found.")
 
         logger.info(f"Retrieved value for key: {key} from the local cache.")
         return value_in_local_cache

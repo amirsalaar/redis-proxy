@@ -5,7 +5,8 @@ from src.constants import REDIS_ADDRESS, CACHE_CAPACITY, GLOBAL_CACHE_EXPIRY
 from flask import jsonify
 from src.local_cache import LocalCache
 
-proxy_controller = Blueprint("proxy_controller", __name__, url_prefix="/proxy")
+PROX_URL_PREFIX = "/proxy"
+proxy_controller = Blueprint("proxy_controller", __name__, url_prefix=PROX_URL_PREFIX)
 
 local_cache = LocalCache(capacity=CACHE_CAPACITY, global_expiry=GLOBAL_CACHE_EXPIRY)
 
