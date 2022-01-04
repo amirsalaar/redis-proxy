@@ -34,7 +34,7 @@ def test_local_cache_get():
     local_cache = LocalCache(capacity=2, global_expiry=5)
 
     local_cache.set("key1", "value1")
-    time.sleep(2)
+    time.sleep(1)
     assert local_cache.get("key1") == "value1"
-    time.sleep(3)
+    time.sleep(5)
     assert local_cache.get("key1") is None
