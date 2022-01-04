@@ -79,3 +79,7 @@ At the time of setting a new key-value pair in the cache, an expiry in seconds w
 # Instruction On How To Run The Proxy And Tests
 
 # List of Not Imlemented Requirements
+
+# Assumptions
+
+I assumed that the Backing Redis acts as a permanenet database and the data wont be deleted from it after expiry.
