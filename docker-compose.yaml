@@ -4,15 +4,17 @@ services:
         image: redis:alpine
         # network_mode: host
         ports:
-            - "6379"
-        container_name: a-redis-cont
+            - "6379:6379"
+        container_name: a-redis-container
 
-    # flask_web_service:
-    #     build: .
-    #     command:
-
-    #     depends_on:
-    #         - redis
-    #     ports:
-    #         - "$PORT:$PORT" # host:container
-    #     container_name: flask-server-cont
+    flask_web_service:
+        build: .
+        environment:
+          - FLASK_APP=manage.py
+        env_file:
+            - .env
+        ports:
+          - "$FLASK_RUN_PORT:$FLASK_RUN_PORT"
+        depends_on:
+            - redis
+        container_name: flask-server-container

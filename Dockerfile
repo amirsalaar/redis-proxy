@@ -1,17 +1,21 @@
-FROM python:3.9
-RUN pip3 install pipenv
+FROM python:3.10.0
 
-RUN mkdir /app
 WORKDIR /app
 COPY . /app
-RUN pipenv install --system --deploy --ignore-pipfile
 
-RUN mkdir -p /app/logs
+RUN mkdir -p /app/logs \
+    && cd /app \
+    && pip3 install --no-cache-dir pipenv \
+    && pipenv install --system --deploy --ignore-pipfile
 
-ENV APP_ENV dev
+
+ENV FLASK_ENV=production
 ENV FLASK_APP manage.py
 ENV FLASK_RUN_PORT=8080
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_DEBUG=1
+ENV FLASK_DEBUG=0
+
+
+EXPOSE 8080
 
 CMD ["flask", "run"]
