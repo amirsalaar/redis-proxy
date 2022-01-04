@@ -68,7 +68,7 @@ For concurrent access management, a mutual exclusion object was used. I had no p
 - `mutex`: An oject is created so that multiple program thread can take turns sharing the same resource. It is a **locking mechanism**.
 - `semaphore`: It is a signaling mechanism.
 
-The mutex object in Python has been implemented using the threading module by locking the thread to wait for the current thread to finish first before proceeding to the next thread. In the `CacheBox` class, `locker` has been used as mutex to manage the locking and thread.
+The mutex object in Python has been implemented using the threading module by locking the thread to wait for the current thread to finish first before proceeding to the next thread. In the `CacheContainer` class, `locker` has been used as mutex to manage the locking and thread.
 
 ## Expiry Implementation
 
