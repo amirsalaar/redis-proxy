@@ -57,7 +57,8 @@ make
 
 - GET `/proxy?key=your-key`
 
-  Example: GET `/proxy?key=seeded_key1`
+  - query_parameter: `key`
+  - Example: GET `/proxy?key=seeded_key1`
 
 # High-Level Architecture And Code Overview
 
@@ -127,12 +128,6 @@ The controller module holds the logic for communicating with the endpoints. It a
 # Algorithmic Complexity
 
 A built-in python OrederedDict has been used in the implementation of the LRU. Similar to dictionaries, the `get` and `set` method to retrieve and put a key value is of O(1) time complexity. The space complexity depdends on the value that has been stored initially. When looking up the Backing Redis for a key value the time complexity will be still O(1).
-
-# List of Not Imlemented Requirements
-
-Unfortunately, I was unlucky that upon coming back from vaccation, I got COVID and was sick for the past week. As promised, I wanted to send over the project on the proposed due date and did not get a chance to start on the bonus requirements. I would be happily do that; however, before our next round of interviews.
-
-I think have an idea for how to use a semaphore as a signaling mechanism for handling concurrent clients.
 
 # Local Development
 
