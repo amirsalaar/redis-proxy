@@ -4,11 +4,6 @@ from threading import Lock
 from dataclasses import dataclass
 
 from src.local_cache.lru_cache import LRUCache
-from src.vars import env_vars_store
-
-GLOBAL_CACHE_EXPIRY = int(env_vars_store.get("GLOBAL_CACHE_EXPIRY", "60"))  # seconds
-CACHE_CAPACITY = int(env_vars_store.get("CACHE_CAPACITY", "10"))
-
 
 # The following mutext has been declared globally to simplify the thread locking.
 cache_locker = Lock()
@@ -38,9 +33,7 @@ class CachedValue:
 class LocalCache:
     """This class imlements the local cache."""
 
-    def __init__(
-        self, capacity: int = CACHE_CAPACITY, global_expiry: int = GLOBAL_CACHE_EXPIRY
-    ):
+    def __init__(self, capacity: int, global_expiry: int):
         """Initialize the cache box.
 
         Args:

@@ -5,15 +5,10 @@ import pytest
 
 @pytest.mark.order1
 def test_local_cache_get_with_global_config(mocker: MockFixture):
-    """
-    Test the get method of the local cache with global config.
-    """
-    mocker.patch(
-        "src.vars.env_vars_store", {"GLOBAL_CACHE_EXPIRY": "5", "CACHE_CAPACITY": "2"}
-    )
+    """Test the get method of the local cache with global config."""
     from src.local_cache import LocalCache
 
-    local_cache = LocalCache()
+    local_cache = LocalCache(capacity=2, global_expiry=5)
 
     local_cache.set("key1", "value1")
     time.sleep(2)
@@ -32,9 +27,7 @@ def test_local_cache_get_with_global_config(mocker: MockFixture):
 
 @pytest.mark.order2
 def test_local_cache_get():
-    """
-    Test the get method of the local cache.
-    """
+    """Test the get method of the local cache."""
     from src.local_cache import LocalCache
 
     local_cache = LocalCache(capacity=2, global_expiry=5)
