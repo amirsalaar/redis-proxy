@@ -1,3 +1,4 @@
+"""This controller is responsible for handling the requests to the proxy app."""
 from flask import Blueprint, request
 from src.utilities import ehandler, ProxyAppError
 from .service import ProxyService

@@ -1,3 +1,4 @@
+"""This module manages the scripts we use to interact with the application."""
 import os
 import pytest
 import click
@@ -11,6 +12,7 @@ app = create_app()
 @app.cli.command("tests")
 @click.argument("option", required=False)
 def run_test_with_option(option: str = None):
+    """Run tests with option."""
     from subprocess import run
     from shlex import split
 

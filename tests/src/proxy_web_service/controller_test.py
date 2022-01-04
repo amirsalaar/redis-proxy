@@ -1,3 +1,4 @@
+"""Tests for proxy controller.py ."""
 from flask.testing import FlaskClient
 
 from src.backing_redis import redis_client
