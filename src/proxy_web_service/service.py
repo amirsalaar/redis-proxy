@@ -24,8 +24,7 @@ class ProxyService:
 
         Args:
             redis_full_address (str): The full address of the Backing Redis.
-            cache_capacity (int): The capacity of the LocalCache.
-            global_cache_expiry (int): The global expiry time of the LocalCache in seconds.
+            in_memory_local_cache (LocalCache): The global in memory cache.
         """
         self.proxy = Proxy(
             redis_client=RedisClient(redis_full_address),

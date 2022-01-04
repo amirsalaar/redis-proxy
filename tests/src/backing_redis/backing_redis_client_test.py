@@ -1,4 +1,5 @@
 import pytest
+from src.constants import REDIS_ADDRESS
 
 
 def test_redis_client_throws_error_on_improper_connection():
@@ -16,7 +17,7 @@ def test_redis_client_throws_error_on_improper_connection():
 def test_get_a_key_val_from_backing_redis():
     from src.backing_redis import get, redis_client
 
-    client = redis_client("localhost:6379")
+    client = redis_client(REDIS_ADDRESS)
 
     client.set("test_key2", "value2")
 
@@ -29,7 +30,7 @@ def test_get_a_key_val_from_backing_redis():
 def test_wrapper_class():
     from src.backing_redis import RedisClient
 
-    client = RedisClient("localhost:6379")
+    client = RedisClient(REDIS_ADDRESS)
 
     client.instance.set("test_key2", "value2")
 
