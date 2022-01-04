@@ -3,8 +3,11 @@ from src.utilities import ehandler, ProxyAppError
 from .service import ProxyService
 from src.constants import REDIS_ADDRESS, CACHE_CAPACITY, GLOBAL_CACHE_EXPIRY
 from flask import jsonify
+from src.local_cache import LocalCache
 
 proxy_controller = Blueprint("proxy_controller", __name__, url_prefix="/proxy")
+
+local_cache = LocalCache(capacity=CACHE_CAPACITY, global_expiry=GLOBAL_CACHE_EXPIRY)
 
 
 @proxy_controller.route("/", methods=["GET"])
@@ -19,8 +22,7 @@ def get():
 
     proxy_service = ProxyService(
         redis_full_address=REDIS_ADDRESS,
-        cache_capacity=CACHE_CAPACITY,
-        global_cache_expiry=GLOBAL_CACHE_EXPIRY,
+        in_memory_local_cache=local_cache,
     )
 
     response_obj = {"cached_value": proxy_service.retrieve_value_for(key)}
