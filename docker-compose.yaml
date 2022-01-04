@@ -10,6 +10,7 @@ services:
     flask_web_service:
         build: .
         environment:
+          - FLASK_ENV=production
           - FLASK_APP=manage.py
         env_file:
             - .env
