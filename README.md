@@ -156,3 +156,24 @@ export FLASK_APP=manage.py
    ```bash
    flask tests debug
    ```
+
+# Time Spent On Each Part of the Project
+
+1. Reading the specs and understanding it: A couple of hours or maybe an hour
+2. Setting up the whole project skleton: few hours of a day after work
+3. Breaking down the tasks needed to be done and breaking the components need to be developed: An hour
+4. Developing the local cache and LRU cache and their unit tests: about 3 to 4 hours
+5. Developing the client for setting up the communication with the backing redis with their unit test: less than an hour
+6. Developing the HTTP proxy server and its service and controller with their unit tests: about a day
+7. Developing utilities of the project and testing them: 2 to 3 hours
+8. Writing e2e test: few hours
+9. Making the project work with a single click build and test with `make`: les than an hour
+10. Developing the Dockerfile, and docker-compose.yaml for orchestrating the docker containers: an hour or two
+11. Writing up documentations: about 2 hours
+
+# A list of the missing requirements:
+
+- The bonus points:
+  - Parallel concurrent processing
+  - Concurrent client limit
+  - Redis client protocol
