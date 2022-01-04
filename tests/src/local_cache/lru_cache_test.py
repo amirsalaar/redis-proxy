@@ -11,7 +11,7 @@ def test_lru_cache_get():
     cache.set("key2", 2)
     cache.set("key3", 3)  # key2 will be removed
 
-    assert cache.get("key2") == -1
+    assert cache.get("key2") is None
     assert cache.get("key1") == 1
     assert cache.get("key3") == 3
 
@@ -29,5 +29,5 @@ def test_lru_cache_remove():
 
     cache.remove("key1")
 
-    assert cache.get("key1") == -1
+    assert cache.get("key1") is None
     assert cache.get("key2") == 2

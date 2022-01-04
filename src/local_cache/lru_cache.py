@@ -9,7 +9,7 @@ class LRUCache:
 
     def get(self, key: str) -> any:
         """we return the value of the key
-        that is queried in O(1) and return -1 if we
+        that is queried in O(1) and return None if we
         don't find the key in out dict / cache.
         And also move the key to the beginning
         to show that it was recently used.

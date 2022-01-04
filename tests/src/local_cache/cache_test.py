@@ -21,7 +21,8 @@ def test_local_cache_get_with_global_config(mocker: MockFixture):
     local_cache.set("key3", "value3")
 
     assert all(
-        key in local_cache.cache_box.cache.get_all_keys() for key in ["key3", "key1"]
+        key in local_cache.cache_container.cache.get_all_keys()
+        for key in ["key3", "key1"]
     )
 
 

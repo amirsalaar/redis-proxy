@@ -10,7 +10,7 @@ cache_locker = Lock()
 
 
 @dataclass
-class CacheBox:
+class CacheContainer:
     """A cache box is a container for a LRUCache with a global expiry.
     The cache might be in use by a thread. So, i order to avoid
     its interferece with other threads, it must be locked when it is used.
@@ -40,7 +40,9 @@ class LocalCache:
             capacity (int): the number of keys in the cache.
             global_expiry (int): the time period of the cache in seconds.
         """
-        self.cache_box = CacheBox(cache=LRUCache(capacity), global_expiry=global_expiry)
+        self.cache_container = CacheContainer(
+            cache=LRUCache(capacity), global_expiry=global_expiry
+        )
 
     def get(self, key: str) -> any:
         """Get the value of the key.
@@ -51,10 +53,10 @@ class LocalCache:
         global cache_locker
         cache_locker.acquire()  # locks the unlocked thread
         try:
-            cached_value: CachedValue = self.cache_box.cache.get(key)
+            cached_value: CachedValue = self.cache_container.cache.get(key)
             if cached_value:
                 if self._is_expired(cached_value):
-                    self.cache_box.cache.remove(key)
+                    self.cache_container.cache.remove(key)
                     return None
                 else:
                     return cached_value.value
@@ -74,13 +76,13 @@ class LocalCache:
             None
         """
         now = time.time()
-        expiry = now + self.cache_box.global_expiry
+        expiry = now + self.cache_container.global_expiry
 
         cached_value = CachedValue(value=value, expiry=expiry)
         global cache_locker
         cache_locker.acquire()  # locks the unlocked thread
         try:
-            self.cache_box.cache.set(key, cached_value)
+            self.cache_container.cache.set(key, cached_value)
         finally:
             cache_locker.release()
 
