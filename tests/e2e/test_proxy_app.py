@@ -1,24 +1,15 @@
 """End to End test of the APP."""
-import os
 import time
 from flask.testing import FlaskClient
 from redis import Redis
 import pytest
-from pytest_mock import MockerFixture
 
-from src.local_cache import LocalCache
-
-if os.getenv("FLASK_ENV") == "production":
-    TEST_REDIS_ADDRESS = "redis:6379"
-else:
-    TEST_REDIS_ADDRESS = "localhost:6379"
-CAPACITY = 10
-GLOBAL_EXPIRY = 30  # seconds
+from src.constants import CACHE_CAPACITY, GLOBAL_CACHE_EXPIRY
 
 
 @pytest.mark.order0
 def test_proxy_app_throws_handled_error_response_on_invalid_key(
-    test_client: FlaskClient, mocked_redis_address
+    test_client: FlaskClient,
 ):
     """Test if NotFound error is returned for non-existing keys."""
     res = test_client.get("/proxy/", query_string={"key": "key100"})
@@ -29,7 +20,7 @@ def test_proxy_app_throws_handled_error_response_on_invalid_key(
 
 @pytest.mark.order1
 def test_proxy_app_should_retrieve_key_from_redis_instance(
-    test_client: FlaskClient, test_redis_client: Redis, mocked_redis_address
+    test_client: FlaskClient, test_redis_client: Redis
 ):
     """Test the proxy app workflow.
     This is the initial state of the Backing Redis server and the key doesnt exist on the local cache.
@@ -43,7 +34,7 @@ def test_proxy_app_should_retrieve_key_from_redis_instance(
 
 @pytest.mark.order2
 def test_proxy_app_should_retrieve_key_from_local_cache_scenario1(
-    test_client: FlaskClient, test_redis_client: Redis, mocked_redis_address
+    test_client: FlaskClient, test_redis_client: Redis
 ):
     """Test key retrieval from local cache.
 
@@ -64,10 +55,8 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario1(
 
 @pytest.mark.order3
 def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
-    mocker: MockerFixture,
     test_client: FlaskClient,
     test_redis_client: Redis,
-    mocked_redis_address,
 ):
     """Test key retrieval from local cache.
 
@@ -76,9 +65,6 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
             -> it retrieves the key from the local cache and removes it due to being expired.
             -> then looks into backing redis for the key and if finds it puts it back into the local cache.
     """
-    mocker.patch(
-        "src.proxy_web_service.controller.local_cache", LocalCache(CAPACITY, 3)
-    )
 
     test_redis_client.set("key3", "value3")
 
@@ -86,7 +72,9 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
     assert res1.json == {"cached_value": "value3"}
 
     test_redis_client.set("key3", "value in redis changed")
-    time.sleep(3)
+    time.sleep(
+        GLOBAL_CACHE_EXPIRY + 1
+    )  # sleep for 1 additional second to the globally configured cache expiry time in .env
     res2 = test_client.get("/proxy/", query_string={"key": "key3"})
 
     assert res2.json == {"cached_value": "value in redis changed"}
@@ -94,10 +82,8 @@ def test_proxy_app_should_retrieve_key_from_local_cache_scenario2(
 
 @pytest.mark.order4
 def test_proxy_app_should_delete_the_lru_cached_key_if_we_hit_cache_key_limit(
-    mocker: MockerFixture,
     test_client: FlaskClient,
     test_redis_client: Redis,
-    mocked_redis_address,
 ):
     """Test deletion of a key from the local cache when reaching the capacity.
 
@@ -109,15 +95,10 @@ def test_proxy_app_should_delete_the_lru_cached_key_if_we_hit_cache_key_limit(
             -> The 11th key will be added to the local cache and key1 will be evicted.
 
     """
-    mocker.patch(
-        "src.proxy_web_service.controller.local_cache",
-        LocalCache(CAPACITY, GLOBAL_EXPIRY),
-    )
-
-    for i in range(1, CAPACITY + 2):
+    for i in range(1, CACHE_CAPACITY + 2):
         test_redis_client.set(f"key{i}", f"value{i}")
 
-    for i in range(1, CAPACITY + 2):
+    for i in range(1, CACHE_CAPACITY + 2):
         # all the keys will be added to the local cache:
         test_client.get("/proxy/", query_string={"key": f"key{i}"})
 

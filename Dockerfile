@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . /app
 
 RUN mkdir -p /app/logs \
-    && rm -r ./.env \
+    && rm -r /app/.env.local \
     && cd /app \
     && pip3 install --no-cache-dir pipenv \
     && pipenv install --system --deploy --ignore-pipfile
