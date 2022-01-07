@@ -95,22 +95,26 @@ def test_proxy_app_should_delete_the_lru_cached_key_if_we_hit_cache_key_limit(
             -> The 11th key will be added to the local cache and key1 will be evicted.
 
     """
+    # populate Backing Redis:
     for i in range(1, CACHE_CAPACITY + 2):
         test_redis_client.set(f"key{i}", f"value{i}")
 
+    # read from the proxy:
     for i in range(1, CACHE_CAPACITY + 2):
-        # all the keys will be added to the local cache:
+        # all the keys will be added to the local cache, order of LRU: [key1, key2, key3, ...]
         test_client.get("/proxy/", query_string={"key": f"key{i}"})
 
-    # At this point key10 is the LRU key and will be evicted.
+    # So far key1 has been evicted, cuz it was retrieved at the very beginning and
+    # when we sat key11 after reachin the limit of 10, key1 was the LRU.
 
-    test_redis_client.set("key10", "updated value10")
-    test_redis_client.set("key11", "value11")
+    # update the key1 value in the backing redis
+    test_redis_client.set("key1", "updated value1")
 
-    res2 = test_client.get("/proxy/", query_string={"key": "key10"})
+    # get key1
+    res2 = test_client.get("/proxy/", query_string={"key": "key1"})
 
-    # we had initially cached 'value10',
+    # we had initially cached 'value1',
     # but since we expect it to be evicted,
-    # we dont expect 'key10' have 'value10' anymore.
-    assert res2.json != {"cached_value": "value10"}
-    assert res2.json == {"cached_value": "updated value10"}
+    # we dont expect 'key1' have 'value1' anymore:
+    assert res2.json != {"cached_value": "value1"}
+    assert res2.json == {"cached_value": "updated value1"}

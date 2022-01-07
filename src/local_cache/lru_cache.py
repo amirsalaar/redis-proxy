@@ -24,8 +24,8 @@ class LRUCache:
             return None
         else:
             self.cache.move_to_end(
-                key, last=False
-            )  # moves to the beginning due to last=False
+                key
+            )  # moves it to the end because it's least recently used
             return self.cache[key]
 
     def set(self, key: str, value: any) -> None:
@@ -34,18 +34,19 @@ class LRUCache:
         2. We will also check whether the length of our
             ordered dictionary has exceeded our capacity,
             If so we remove the key from the beginning (least recently used)
-        3. Move the key to the beginning to show that it was recently used.
+        3. Move the key to the end to show that it was just used so that LEAST rececently used ones
+            are left at the beginning of the list.
 
         Args:
             key (str): the key to be added / updated.
             value (any): the value of the key to be added / updated.
         """
         self.cache[key] = value
+        self.cache.move_to_end(
+            key,
+        )
         if len(self.cache) > self.capacity:
             self.cache.popitem(last=False)
-        self.cache.move_to_end(
-            key, last=False
-        )  # moves to the beginning due to last=False
 
     def remove(self, key: str) -> None:
         """
